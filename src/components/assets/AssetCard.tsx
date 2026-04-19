@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ImageModal } from '@/components/common/Modal';
 import { getResolutionLabel } from '@/lib/utils';
+import { ImageModal } from '@/components/common/Modal';
 import type { Asset } from '@/types';
 
 interface AssetCardProps {
   asset: Asset;
   index?: number;
-  showMovieTitle?: boolean;
 }
 
-export const AssetCard = ({ asset, index = 0, showMovieTitle = false }: AssetCardProps) => {
+export const AssetCard = ({ asset, index = 0 }: AssetCardProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   
   const handleDownload = () => {
@@ -32,33 +31,30 @@ export const AssetCard = ({ asset, index = 0, showMovieTitle = false }: AssetCar
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.05 }}
-        className="group relative rounded-lg overflow-hidden bg-secondary"
+        transition={{ delay: index * 0.03 }}
+        className="group relative rounded-xl overflow-hidden bg-secondary cursor-pointer"
+        onClick={() => setModalOpen(true)}
       >
-        <button
-          onClick={() => setModalOpen(true)}
-          className="block w-full"
-        >
-          <div className="aspect-auto">
-            <img
-              src={asset.image_url}
-              alt={`${asset.type} for ${asset.movie?.title}`}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              loading="lazy"
-            />
-          </div>
-        </button>
+        <div className="aspect-[2/3]">
+          <img
+            src={asset.image_url}
+            alt={`${asset.type} for ${asset.movie?.title}`}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+          />
+        </div>
         
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-          <div className="absolute bottom-0 left-0 right-0 p-3">
+        {/* Hover Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-white">
+              <span className="text-xs md:text-sm text-white font-medium">
                 {getResolutionLabel(asset.width, asset.height)}
               </span>
               <div className="flex gap-2">
                 <button
-                  onClick={handleCopyUrl}
-                  className="p-1.5 rounded-full bg-white/20 hover:bg-white/40 transition-colors"
+                  onClick={(e) => { e.stopPropagation(); handleCopyUrl(); }}
+                  className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
                   title="Copy URL"
                 >
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,8 +62,8 @@ export const AssetCard = ({ asset, index = 0, showMovieTitle = false }: AssetCar
                   </svg>
                 </button>
                 <button
-                  onClick={handleDownload}
-                  className="p-1.5 rounded-full bg-white/20 hover:bg-white/40 transition-colors"
+                  onClick={(e) => { e.stopPropagation(); handleDownload(); }}
+                  className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
                   title="Download"
                 >
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,14 +74,6 @@ export const AssetCard = ({ asset, index = 0, showMovieTitle = false }: AssetCar
             </div>
           </div>
         </div>
-        
-        {showMovieTitle && asset.movie && (
-          <div className="absolute top-2 left-2">
-            <span className="text-xs text-white bg-black/50 px-2 py-1 rounded">
-              {asset.movie.title}
-            </span>
-          </div>
-        )}
       </motion.div>
       
       <ImageModal

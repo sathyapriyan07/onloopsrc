@@ -39,13 +39,15 @@ export const MovieDetail = () => {
   if (movieLoading) {
     return (
       <div className="min-h-screen bg-primary">
-        <div className="h-[400px] skeleton" />
-        <div className="page-container py-8">
-          <div className="flex gap-2 mb-6">
-            {[1,2,3,4].map(i => <div key={i} className="w-20 h-8 skeleton rounded" />)}
-          </div>
-          <div className="grid grid-cols-5 gap-4">
-            {[...Array(10)].map((_, i) => <div key={i} className="h-48 skeleton rounded" />)}
+        <div className="h-[60vh] skeleton" />
+        <div className="px-4 md:px-8 py-8">
+          <div className="flex gap-8">
+            <div className="w-48 h-72 skeleton rounded-xl" />
+            <div className="flex-1 space-y-4">
+              <div className="h-10 w-2/3 skeleton rounded" />
+              <div className="h-6 w-1/3 skeleton rounded" />
+              <div className="h-20 w-full skeleton rounded" />
+            </div>
           </div>
         </div>
       </div>
@@ -55,10 +57,12 @@ export const MovieDetail = () => {
   if (!movie) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-primary">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-text-primary mb-2">Movie not found</h2>
-          <p className="text-text-secondary mb-4">The movie you're looking for doesn't exist.</p>
-          <Link to="/movies" className="btn-primary">Browse Movies</Link>
+        <div className="text-center px-4">
+          <h2 className="text-2xl font-bold text-white mb-2">Movie not found</h2>
+          <p className="text-text-secondary mb-6">The movie you're looking for doesn't exist.</p>
+          <Link to="/movies" className="px-6 py-3 bg-accent text-black font-semibold rounded-full">
+            Browse Movies
+          </Link>
         </div>
       </div>
     );
@@ -68,20 +72,45 @@ export const MovieDetail = () => {
     <div className="min-h-screen bg-primary">
       <MovieHero movie={movie} />
       
-      <div className="page-container py-8">
-        <div className="flex gap-1 mb-6 border-b border-[#222]">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
-            >
-              {tab.label}
-            </button>
-          ))}
+      {/* Tab Navigation */}
+      <div className="border-b border-[#222] sticky top-14 md:top-16 bg-primary/95 backdrop-blur-sm z-30">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <nav className="flex gap-1 overflow-x-auto scrollbar-hide">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-4 md:px-6 py-3 md:py-4 text-sm md:text-base font-medium whitespace-nowrap transition-all relative ${
+                  activeTab === tab.id
+                    ? 'text-accent'
+                    : 'text-text-secondary hover:text-white'
+                }`}
+              >
+                {tab.label}
+                {activeTab === tab.id && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent" />
+                )}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </div>
+      
+      {/* Assets Grid */}
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
+        <div className="mb-6">
+          <h2 className="text-xl md:text-2xl font-semibold text-white">
+            {tabs.find(t => t.id === activeTab)?.label}
+          </h2>
+          <p className="text-text-secondary text-sm mt-1">
+            {assets?.length || 0} {activeTab}s available
+          </p>
         </div>
         
-        <AssetGrid assets={assets || []} emptyMessage={`No ${activeTab}s found`} />
+        <AssetGrid 
+          assets={assets || []} 
+          emptyMessage={`No ${activeTab}s found for this movie`} 
+        />
       </div>
     </div>
   );
