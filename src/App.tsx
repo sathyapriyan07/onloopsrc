@@ -7,6 +7,7 @@ import Movies from '@/pages/Movies';
 import MovieDetail from '@/pages/MovieDetail';
 import Explore from '@/pages/Explore';
 import Search from '@/pages/Search';
+import Login from '@/pages/Login';
 import Admin from '@/pages/Admin';
 
 const queryClient = new QueryClient({
@@ -30,6 +31,7 @@ function App() {
             <Route path="explore" element={<Explore />} />
             <Route path="search" element={<Search />} />
           </Route>
+          <Route path="/login" element={<Login />} />
           <Route 
             path="/admin" 
             element={
