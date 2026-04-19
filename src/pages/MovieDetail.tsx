@@ -5,7 +5,6 @@ import { MovieHero } from '@/components/movies/MovieHero';
 import { AssetGrid } from '@/components/assets/AssetGrid';
 import { supabase } from '@/lib/supabase';
 import type { Movie, Asset } from '@/types';
-import { classNames } from '@/lib/utils';
 
 const tabs = [
   { id: 'poster', label: 'Posters' },
@@ -19,27 +18,19 @@ export const MovieDetail = () => {
   const [activeTab, setActiveTab] = useState<string>('poster');
   
   const { data: movie, isLoading: movieLoading } = useQuery({
-    queryKey: ['movie', 'slug', slug],
+    queryKey: ['movie', slug],
     queryFn: async () => {
-      const { data } = await supabase
-        .from('movies')
-        .select('*')
-        .eq('slug', slug)
-        .single();
+      const { data } = await supabase.from('movies').select('*').eq('slug', slug).single();
       return data as Movie;
     },
     enabled: !!slug,
   });
   
-  const { data: assets, isLoading: assetsLoading } = useQuery({
-    queryKey: ['assets', 'movie', movie?.id, activeTab],
+  const { data: assets } = useQuery({
+    queryKey: ['assets', movie?.id, activeTab],
     queryFn: async () => {
       if (!movie?.id) return [];
-      const { data } = await supabase
-        .from('assets')
-        .select('*')
-        .eq('movie_id', movie.id)
-        .eq('type', activeTab);
+      const { data } = await supabase.from('assets').select('*').eq('movie_id', movie.id).eq('type', activeTab);
       return (data || []) as Asset[];
     },
     enabled: !!movie?.id,
@@ -47,13 +38,14 @@ export const MovieDetail = () => {
   
   if (movieLoading) {
     return (
-      <div>
-        <div className="h-[50vh] skeleton" />
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {[...Array(10)].map((_, i) => (
-              <div key={i} className="h-48 skeleton rounded-lg" />
-            ))}
+      <div className="min-h-screen bg-primary">
+        <div className="h-[400px] skeleton" />
+        <div className="page-container py-8">
+          <div className="flex gap-2 mb-6">
+            {[1,2,3,4].map(i => <div key={i} className="w-20 h-8 skeleton rounded" />)}
+          </div>
+          <div className="grid grid-cols-5 gap-4">
+            {[...Array(10)].map((_, i) => <div key={i} className="h-48 skeleton rounded" />)}
           </div>
         </div>
       </div>
@@ -62,9 +54,9 @@ export const MovieDetail = () => {
   
   if (!movie) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-primary">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold text-text-primary mb-2">Movie not found</h2>
+          <h2 className="text-2xl font-bold text-text-primary mb-2">Movie not found</h2>
           <p className="text-text-secondary mb-4">The movie you're looking for doesn't exist.</p>
           <Link to="/movies" className="btn-primary">Browse Movies</Link>
         </div>
@@ -73,32 +65,23 @@ export const MovieDetail = () => {
   }
   
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-primary">
       <MovieHero movie={movie} />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+      <div className="page-container py-8">
+        <div className="flex gap-1 mb-6 border-b border-[#222]">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={classNames(
-                'px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors',
-                activeTab === tab.id
-                  ? 'bg-accent text-white'
-                  : 'bg-secondary text-text-secondary hover:text-white'
-              )}
+              className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
             >
               {tab.label}
             </button>
           ))}
         </div>
         
-        <AssetGrid
-          assets={assets || []}
-          isLoading={assetsLoading}
-          emptyMessage={`No ${activeTab} found for this movie`}
-        />
+        <AssetGrid assets={assets || []} emptyMessage={`No ${activeTab}s found`} />
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { classNames } from '@/lib/utils';
 import { supabase } from '@/lib/supabase';
 
@@ -34,25 +33,23 @@ export const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 bg-primary/80 backdrop-blur-md border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-primary/95 backdrop-blur-sm border-b border-[#222]">
+      <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+        <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
-              <span className="text-white font-bold text-lg">C</span>
-            </div>
-            <span className="text-xl font-semibold text-text-primary">CineAssets</span>
+            <span className="text-2xl font-bold text-accent">Cine</span>
+            <span className="text-2xl font-bold text-text-primary">Assets</span>
           </Link>
           
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 className={classNames(
-                  'text-sm font-medium transition-colors hover:text-white',
+                  'text-sm font-medium transition-colors hover:text-accent',
                   location.pathname === link.path
-                    ? 'text-white'
+                    ? 'text-accent'
                     : 'text-text-secondary'
                 )}
               >
@@ -60,97 +57,84 @@ export const Header = () => {
               </Link>
             ))}
           </nav>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <Link
+            to="/search"
+            className="p-2 text-text-secondary hover:text-accent transition-colors"
+            title="Search"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </Link>
           
-          <div className="flex items-center gap-4">
-            <Link
-              to="/search"
-              className="p-2 text-text-secondary hover:text-white transition-colors"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </Link>
-            
-            {user ? (
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-text-secondary hidden sm:block">
-                  {user.email?.split('@')[0]}
-                </span>
-                <button
-                  onClick={handleSignOut}
-                  className="px-3 py-1.5 rounded-lg bg-secondary text-text-secondary text-sm hover:text-white transition-colors"
-                >
-                  Sign Out
-                </button>
-              </div>
-            ) : (
+          {user ? (
+            <div className="flex items-center gap-3">
               <Link
-                to="/login"
-                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-accent text-white text-sm hover:bg-accent-hover transition-colors"
+                to="/admin"
+                className="text-sm text-text-secondary hover:text-accent transition-colors"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                </svg>
-                <span>Login</span>
+                Admin
               </Link>
-            )}
-            
-            <button
-              className="md:hidden p-2 text-text-secondary"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              <button
+                onClick={handleSignOut}
+                className="text-sm text-text-secondary hover:text-accent transition-colors"
+              >
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="text-sm bg-accent text-black px-4 py-1.5 rounded font-medium hover:bg-accent-hover transition-colors"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
+              Sign In
+            </Link>
+          )}
+          
+          <button
+            className="md:hidden p-2 text-text-secondary"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
         </div>
       </div>
       
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-border"
-          >
-            <nav className="px-4 py-4 space-y-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={classNames(
-                    'block py-2 px-4 rounded-lg text-sm font-medium transition-colors',
-                    location.pathname === link.path
-                      ? 'bg-secondary text-white'
-                      : 'text-text-secondary hover:text-white'
-                  )}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              {user ? (
-                <button
-                  onClick={() => { handleSignOut(); setMobileMenuOpen(false); }}
-                  className="block py-2 px-4 rounded-lg text-sm font-medium text-text-secondary hover:text-white w-full text-left"
-                >
-                  Sign Out
-                </button>
-              ) : (
-                <Link
-                  to="/login"
-                  className="block py-2 px-4 rounded-lg text-sm font-medium text-text-secondary hover:text-white"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Login
-                </Link>
-              )}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-[#222]">
+          <nav className="px-4 py-3 space-y-2">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={classNames(
+                  'block py-2 px-3 rounded text-sm font-medium transition-colors',
+                  location.pathname === link.path
+                    ? 'bg-secondary text-accent'
+                    : 'text-text-secondary'
+                )}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+            {user && (
+              <Link
+                to="/admin"
+                className="block py-2 px-3 rounded text-sm font-medium text-text-secondary"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Admin
+              </Link>
+            )}
+          </nav>
+        </div>
+      )}
     </header>
   );
 };
