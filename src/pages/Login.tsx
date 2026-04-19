@@ -40,14 +40,14 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-primary">
-      <div className="w-full max-w-md p-8">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-xl bg-accent flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">C</span>
+    <div className="min-h-screen flex items-center justify-center bg-primary px-4">
+      <div className="w-full max-w-sm sm:max-w-md p-6 sm:p-8">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-accent flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <span className="text-black font-bold text-xl sm:text-2xl">C</span>
           </div>
-          <h1 className="text-2xl font-bold text-text-primary">CineAssets</h1>
-          <p className="text-text-secondary mt-2">
+          <h1 className="text-xl sm:text-2xl font-bold text-text-primary">CineAssets</h1>
+          <p className="text-xs sm:text-sm text-text-secondary mt-2">
             {mode === 'signin' ? 'Sign in to access admin panel' : 'Create an account'}
           </p>
         </div>
@@ -75,7 +75,7 @@ export const Login = () => {
           </div>
 
           {error && (
-            <p className={`text-sm ${error.includes('Check') ? 'text-green-500' : 'text-red-500'}`}>
+            <p className={`text-xs sm:text-sm ${error.includes('Check') ? 'text-green-500' : 'text-red-500'}`}>
               {error}
             </p>
           )}
@@ -92,7 +92,7 @@ export const Login = () => {
         <div className="mt-4 text-center">
           <button
             onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
-            className="text-sm text-text-secondary hover:text-white"
+            className="text-xs sm:text-sm text-text-secondary hover:text-accent"
           >
             {mode === 'signin' 
               ? "Don't have an account? Sign up" 

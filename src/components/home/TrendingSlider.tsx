@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { getImageUrl } from '@/lib/tmdb';
 import type { Movie } from '@/types';
 
@@ -23,14 +22,12 @@ export const TrendingSlider = ({ movies, isLoading }: TrendingSliderProps) => {
   
   if (isLoading) {
     return (
-      <div className="py-8">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="h-8 w-48 skeleton rounded" />
-        </div>
-        <div className="flex gap-4 overflow-hidden">
+      <div className="section-spacing">
+        <h2 className="section-title">Trending Movies</h2>
+        <div className="trending-slider">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="flex-shrink-0 w-[180px]">
-              <div className="h-[270px] skeleton rounded-lg" />
+            <div key={i} className="slider-item">
+              <div className="h-[180px] sm:h-[210px] skeleton rounded" />
             </div>
           ))}
         </div>
@@ -41,69 +38,44 @@ export const TrendingSlider = ({ movies, isLoading }: TrendingSliderProps) => {
   if (movies.length === 0) return null;
   
   return (
-    <div className="py-8">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold text-text-primary">Trending Movies</h2>
-        <div className="flex gap-2">
-          <button
-            onClick={() => scroll('left')}
-            className="p-2 rounded-full bg-secondary hover:bg-tertiary transition-colors"
-          >
-            <svg className="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            onClick={() => scroll('right')}
-            className="p-2 rounded-full bg-secondary hover:bg-tertiary transition-colors"
-          >
-            <svg className="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
+    <div className="section-spacing">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="section-title mb-0 border-0 pb-0">Trending Movies</h2>
+        <button
+          onClick={() => scroll('right')}
+          className="p-2 rounded-full bg-secondary hover:bg-tertiary transition-colors"
+        >
+          <svg className="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
       
       <div
         ref={sliderRef}
-        className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="trending-slider"
       >
-        {movies.map((movie, idx) => (
-          <motion.div
-            key={movie.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.05 }}
-            className="flex-shrink-0 w-[160px] sm:w-[180px]"
-          >
-            <Link
-              to={`/movie/${movie.slug}`}
-              className="block group"
-            >
-              <div className="relative aspect-[2/3] rounded-lg overflow-hidden mb-3">
+        {movies.map((movie) => (
+          <div key={movie.id} className="slider-item">
+            <Link to={`/movie/${movie.slug}`} className="block group">
+              <div className="poster-card aspect-[2/3] bg-secondary mb-2">
                 {movie.poster_path ? (
                   <img
                     src={getImageUrl(movie.poster_path, 'w342')}
                     alt={movie.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    className="w-full h-full object-cover"
                     loading="lazy"
                   />
                 ) : (
-                  <div className="w-full h-full bg-secondary flex items-center justify-center">
-                    <span className="text-text-muted">No poster</span>
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-text-muted text-xs">No poster</span>
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
-              <h3 className="text-sm font-medium text-text-primary truncate group-hover:text-accent transition-colors">
-                {movie.title}
-              </h3>
-              <p className="text-xs text-text-muted">
-                {movie.release_date?.split('-')[0]}
-              </p>
+              <h3 className="movie-title text-xs sm:text-sm truncate">{movie.title}</h3>
+              <p className="year text-xs">{movie.release_date?.split('-')[0]}</p>
             </Link>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>

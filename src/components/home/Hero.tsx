@@ -24,15 +24,8 @@ export const Hero = ({ movies, isLoading }: HeroProps) => {
   
   if (isLoading) {
     return (
-      <div className="relative h-[70vh]">
+      <div className="relative h-[40vh] sm:h-[50vh]">
         <div className="absolute inset-0 skeleton" />
-        <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16">
-          <div className="max-w-7xl mx-auto space-y-4">
-            <div className="h-12 w-2/3 skeleton rounded" />
-            <div className="h-6 w-1/3 skeleton rounded" />
-            <div className="h-20 w-1/2 skeleton rounded" />
-          </div>
-        </div>
       </div>
     );
   }
@@ -42,7 +35,7 @@ export const Hero = ({ movies, isLoading }: HeroProps) => {
   const currentMovie = movies[currentIndex];
   
   return (
-    <div className="relative h-[70vh] overflow-hidden">
+    <div className="hero-backdrop">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentMovie.id}
@@ -60,13 +53,13 @@ export const Hero = ({ movies, isLoading }: HeroProps) => {
               }}
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/60 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/80 to-transparent" />
         </motion.div>
       </AnimatePresence>
       
       <div className="relative h-full flex items-end">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-24 w-full">
+        <div className="hero-content w-full">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentMovie.id}
@@ -75,25 +68,24 @@ export const Hero = ({ movies, isLoading }: HeroProps) => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <span className="inline-block px-3 py-1 rounded-full bg-accent/20 text-accent text-sm font-medium mb-4">
+              <span className="inline-block px-3 py-1 rounded-full bg-accent/20 text-accent text-xs sm:text-sm font-medium mb-3 sm:mb-4">
                 Featured
               </span>
-              <h1 className="text-4xl md:text-6xl font-bold text-text-primary mb-2">
+              <h1 className="hero-title text-text-primary mb-2">
                 {currentMovie.title}
               </h1>
-              <p className="text-lg text-text-secondary mb-4">
+              <p className="text-sm sm:text-base text-text-secondary mb-3 sm:mb-4">
                 {currentMovie.release_date?.split('-')[0]}
               </p>
-              <p className="max-w-xl text-text-secondary line-clamp-2 mb-6">
+              <p className="hero-overview max-w-lg text-text-secondary line-clamp-2 sm:line-clamp-3 mb-4 sm:mb-6">
                 {currentMovie.overview}
               </p>
               <Link
                 to={`/movie/${currentMovie.slug}`}
-                className="inline-flex items-center gap-2 btn-primary"
+                className="btn-primary inline-flex items-center gap-2"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 View Assets
               </Link>
@@ -102,13 +94,13 @@ export const Hero = ({ movies, isLoading }: HeroProps) => {
         </div>
       </div>
       
-      <div className="absolute bottom-4 right-4 flex gap-2">
+      <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 flex gap-1.5 sm:gap-2">
         {movies.slice(0, 5).map((_, idx) => (
           <button
             key={idx}
             onClick={() => setCurrentIndex(idx)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              idx === currentIndex ? 'w-8 bg-white' : 'bg-white/40'
+            className={`h-1.5 sm:h-2 rounded-full transition-all ${
+              idx === currentIndex ? 'w-6 sm:w-8 bg-white' : 'w-1.5 sm:w-2 bg-white/40'
             }`}
           />
         ))}

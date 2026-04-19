@@ -27,11 +27,11 @@ export const Explore = () => {
   });
   
   return (
-    <div className="min-h-screen py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-text-primary mb-2">Explore</h1>
-          <p className="text-text-secondary">Browse all movie assets</p>
+    <div className="min-h-screen py-6 sm:py-8">
+      <div className="page-container">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-text-primary mb-2">Explore</h1>
+          <p className="text-sm sm:text-base text-text-secondary">Browse all movie assets</p>
         </div>
         
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
@@ -39,11 +39,7 @@ export const Explore = () => {
             <button
               key={type}
               onClick={() => { setTypeFilter(type === 'All' ? null : type.toLowerCase()); setPage(1); }}
-              className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
-                (type === 'All' && !typeFilter) || typeFilter === type.toLowerCase()
-                  ? 'bg-accent text-white'
-                  : 'bg-secondary text-text-secondary hover:text-white'
-              }`}
+              className={`tab-button ${(type === 'All' && !typeFilter) || typeFilter === type.toLowerCase() ? 'active' : ''}`}
             >
               {type}
             </button>
