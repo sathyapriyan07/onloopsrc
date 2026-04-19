@@ -8,7 +8,7 @@ interface FeaturedWallpapersProps {
   isLoading?: boolean;
 }
 
-export const FeaturedWallpapers = ({ wallpapers, isLoading }: FeaturedWallpapersProps) => {
+export const FeaturedWallpapers = ({ wallpapers, isLoading = false }: FeaturedWallpapersProps) => {
   if (isLoading) {
     return (
       <div className="py-8">

@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getImageUrl } from '@/lib/tmdb';
-import type { TMDbMovie } from '@/types';
+import type { Movie } from '@/types';
 
 interface HeroProps {
-  movies: TMDbMovie[];
+  movies: Movie[];
   isLoading?: boolean;
 }
 
@@ -88,7 +88,7 @@ export const Hero = ({ movies, isLoading }: HeroProps) => {
                 {currentMovie.overview}
               </p>
               <Link
-                to={`/movie/${currentMovie.id}`}
+                to={`/movie/${currentMovie.slug}`}
                 className="inline-flex items-center gap-2 btn-primary"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

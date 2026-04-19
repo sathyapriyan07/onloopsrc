@@ -2,10 +2,10 @@ import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getImageUrl } from '@/lib/tmdb';
-import type { TMDbMovie } from '@/types';
+import type { Movie } from '@/types';
 
 interface TrendingSliderProps {
-  movies: TMDbMovie[];
+  movies: Movie[];
   isLoading?: boolean;
 }
 
@@ -78,7 +78,7 @@ export const TrendingSlider = ({ movies, isLoading }: TrendingSliderProps) => {
             className="flex-shrink-0 w-[160px] sm:w-[180px]"
           >
             <Link
-              to={`/movie/${movie.id}`}
+              to={`/movie/${movie.slug}`}
               className="block group"
             >
               <div className="relative aspect-[2/3] rounded-lg overflow-hidden mb-3">
